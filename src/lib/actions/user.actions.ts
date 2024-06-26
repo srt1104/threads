@@ -26,7 +26,7 @@ export async function updateUser({
 
     await User.findOneAndUpdate(
       { id: userId },
-      { username: username.toLowerCase(), name, bio, image, onboarderd: true },
+      { username: username.toLowerCase(), name, bio, image, onboarded: true },
       { upsert: true }
     );
   } catch (error: any) {
@@ -35,5 +35,19 @@ export async function updateUser({
 
   if (path === "/profile/edit") {
     revalidatePath(path);
+  }
+}
+
+export async function fetchUser(userId: string) {
+  try {
+    await connectToDB();
+
+    return await User.findOne({ id: userId });
+    // .populate({
+    //   path: "communities",
+    //   model: Community,
+    // });
+  } catch (error: any) {
+    throw new Error(`Failed to fetch user: ${error.message}`);
   }
 }
